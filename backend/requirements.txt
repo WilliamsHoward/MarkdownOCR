@@ -1,0 +1,26 @@
+# Core Framework
+fastapi>=0.115.0,<0.116.0
+uvicorn[standard]>=0.30.0,<0.31.0
+python-multipart>=0.0.9,<0.1.0
+
+# Data Validation
+pydantic>=2.9.0,<3.0.0
+pydantic-settings>=2.5.0,<3.0.0
+
+# HTTP Client (must be installed before openai)
+httpx>=0.27.0,<0.28.0
+
+# LLM and AI Libraries
+# Using flexible version ranges to allow pip to resolve compatible versions
+openai>=1.40.0,<2.0.0
+langchain>=0.3.0,<0.4.0
+langchain-openai>=0.2.0,<0.3.0
+langchain-core>=0.3.0,<0.4.0
+
+# PDF Processing
+PyMuPDF>=1.24.0,<1.25.0
+pdfplumber>=0.11.0,<0.12.0
+
+# Utilities
+python-dotenv>=1.0.0,<2.0.0
+aiofiles>=24.0.0,<25.0.0
