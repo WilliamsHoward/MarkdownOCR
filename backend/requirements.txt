@@ -21,6 +21,9 @@ langchain-core>=0.3.0,<0.4.0
 PyMuPDF>=1.24.0,<1.25.0
 pdfplumber>=0.11.0,<0.12.0
 
+# Image Processing (for vision model support)
+Pillow>=10.0.0,<11.0.0
+
 # Utilities
 python-dotenv>=1.0.0,<2.0.0
 aiofiles>=24.0.0,<25.0.0

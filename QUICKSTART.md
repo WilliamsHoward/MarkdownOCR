@@ -17,10 +17,13 @@ Before you begin, make sure you have:
 ```bash
 # Install Ollama from https://ollama.com/
 
-# Pull a model (choose one)
-ollama pull llama3        # Recommended: Good balance of speed and quality
-ollama pull mistral       # Alternative: Faster, lighter model
-ollama pull llava         # For image-heavy PDFs (vision-capable)
+# Pull a vision model (RECOMMENDED for best results)
+ollama pull llava         # Vision-capable: Best accuracy, handles all content types
+ollama pull llava:13b     # Alternative: Even better quality, slower
+
+# OR pull a text-only model (faster but less accurate)
+ollama pull llama3        # Text-only: Good balance of speed and quality
+ollama pull mistral       # Text-only: Faster, lighter model
 
 # Start Ollama server
 ollama serve
@@ -39,7 +42,33 @@ curl http://localhost:11434/api/tags
 4. Click "Start Server" (default port: 1234)
 5. Select your model from the dropdown
 
-## Step 2: Test Your LLM Connection (Optional but Recommended)
+## Step 2: Configure Vision Support (Optional)
+
+Create `backend/.env` to customize settings:
+
+```bash
+# Enable vision model (default: true)
+USE_VISION_MODEL=true
+
+# Vision model name
+VISION_MODEL=llava
+
+# Image quality (DPI) - 150 is recommended
+PDF_DPI=150
+
+# Image format
+IMAGE_FORMAT=png
+```
+
+Or use text-only mode for faster processing:
+```bash
+USE_VISION_MODEL=false
+LLM_MODEL=llama3
+```
+
+> **💡 Tip**: Vision mode is enabled by default for better accuracy. See [VISION_GUIDE.md](VISION_GUIDE.md) for details.
+
+## Step 3: Test Your LLM Connection (Optional but Recommended)
 
 ```bash
 cd backend
@@ -51,7 +80,7 @@ python test_llm_connection.py
 
 If you see "✅ CONNECTION TEST PASSED!", you're good to go!
 
-## Step 3: Start the Application
+## Step 4: Start the Application
 
 ### Using Docker (Easiest)
 
@@ -80,14 +109,14 @@ npm install
 npm run dev
 ```
 
-## Step 4: Access the Application
+## Step 5: Access the Application
 
 Open your browser and go to:
 - **Web Interface**: http://localhost:3000
 - **API Docs**: http://localhost:8000/docs
 - **Health Check**: http://localhost:8000/health
 
-## Step 5: Convert Your First PDF
+## Step 6: Convert Your First PDF
 
 1. Click or drag a PDF file to upload
 2. Click "Start Conversion"
@@ -144,18 +173,21 @@ ollama pull llama3             # Pull the model you want
 
 ## Tips for Best Results
 
-- 📊 **Tables**: Works best with clearly formatted tables
-- 💻 **Code**: Excellent at preserving code blocks with syntax
+- 👁️ **Vision Mode**: Enabled by default for best accuracy with all document types
+- 📊 **Tables**: Vision models excel at complex table structures
+- 💻 **Code**: Excellent at preserving code blocks with syntax highlighting
 - 📐 **Math**: Converts formulas to LaTeX notation
-- 🖼️ **Images**: Use `llava` model for image-heavy PDFs
-- ⚡ **Speed**: Use smaller models (7B) for faster conversion
-- 🎯 **Quality**: Use larger models (70B+) for better accuracy
+- 🖼️ **Images/Diagrams**: Vision models can describe visual elements
+- ⚡ **Speed**: Set `USE_VISION_MODEL=false` for 3-5x faster processing
+- 🎯 **Quality**: Use `llava:13b` for even better accuracy than default `llava`
+- 🔍 **Scanned PDFs**: Vision mode can OCR text from images
 
 ## Need Help?
 
 1. Check the [Troubleshooting](README.md#troubleshooting) section
-2. Run `python backend/test_llm_connection.py` to diagnose issues
-3. View backend logs: `docker-compose logs -f backend`
-4. Test the health endpoint: `curl http://localhost:8000/health`
+2. Read the [VISION_GUIDE.md](VISION_GUIDE.md) for vision model details
+3. Run `python backend/test_llm_connection.py` to diagnose issues
+4. View backend logs: `docker-compose logs -f backend`
+5. Test the health endpoint: `curl http://localhost:8000/health`
 
 Happy converting! 🎉

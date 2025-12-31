@@ -6,15 +6,20 @@ A web-based OCR system designed to convert PDF documents into high-quality Markd
 
 ## Features
 
-- **Local AI Processing**: Keep your documents private by using local LLMs.
-- **Format Preservation**: Specifically designed to handle:
+- **🔒 Local AI Processing**: Keep your documents private by using local LLMs.
+- **👁️ Vision Model Support**: Process PDF pages as images for enhanced accuracy (NEW!)
+  - Better table recognition and complex layouts
+  - OCR for scanned documents
+  - Image and diagram description
+  - Improved formula detection
+- **📋 Format Preservation**: Specifically designed to handle:
   - Complex Tables
   - Code Blocks with syntax highlighting
   - Mathematical equations (LaTeX)
   - Section hierarchies and lists
-- **Context-Aware Conversion**: Maintains logical flow and continuity between pages.
-- **Real-time Preview**: View the converted Markdown directly in the browser.
-- **Downloadable Output**: Export your results as standard Markdown files.
+- **🔄 Context-Aware Conversion**: Maintains logical flow and continuity between pages.
+- **👀 Real-time Preview**: View the converted Markdown directly in the browser.
+- **💾 Downloadable Output**: Export your results as standard Markdown files.
 
 ## Project Structure
 
@@ -25,7 +30,8 @@ A web-based OCR system designed to convert PDF documents into high-quality Markd
 
 - Python 3.9+
 - Node.js 18+
-- [Ollama](https://ollama.com/) or [LM Studio](https://lmstudio.ai/) running locally.
+- [Ollama](https://ollama.com/) or [LM Studio](https://lmstudio.ai/) running locally
+- (Optional) Vision-capable model like `llava` for enhanced processing
 
 ## Getting Started
 
@@ -34,7 +40,7 @@ A web-based OCR system designed to convert PDF documents into high-quality Markd
 Before starting, ensure you have:
 - ✅ Docker installed (for containerized setup)
 - ✅ Ollama or LM Studio running locally
-- ✅ A model downloaded (e.g., `ollama pull llama3`)
+- ✅ A model downloaded (e.g., `ollama pull llama3` or `ollama pull llava` for vision)
 
 **Test your LLM connection first:**
 ```bash
@@ -117,9 +123,13 @@ You can configure the LLM provider via environment variables:
 ## How it Works
 
 1. **Upload**: User uploads a PDF through the Next.js frontend.
-2. **Extraction**: The backend uses PyMuPDF to extract text and structural elements from the PDF.
-3. **LLM Processing**: Each page is sent to the local LLM with a specialized prompt to convert the raw text into structured Markdown, passing context from previous pages to ensure continuity.
+2. **Processing**: The backend processes each page using one of two methods:
+   - **Vision Mode** (Default): Renders pages as images and uses a vision-capable LLM to extract all content
+   - **Text Mode**: Extracts text using PyMuPDF (faster but less accurate)
+3. **LLM Processing**: Each page is sent to the local LLM with a specialized prompt to convert content into structured Markdown, passing context from previous pages to ensure continuity.
 4. **Preview & Download**: The user monitors progress in real-time and can preview or download the final Markdown file.
+
+> **💡 New Feature**: Vision model support is now enabled by default! See [VISION_GUIDE.md](VISION_GUIDE.md) for details.
 
 ## Troubleshooting
 
@@ -200,13 +210,29 @@ environment:
 ```
 
 Available models (Ollama examples):
-- `llama3` - General purpose, good balance
-- `mistral` - Faster, lighter model
-- `llava` - Vision-capable for image-based PDFs
-- `codellama` - Better for documents with code
+- `llava` - **Recommended**: Vision-capable for best accuracy (7B)
+- `llava:13b` - Higher quality vision model (13B)
+- `llama3` - Text-only, general purpose, good balance
+- `mistral` - Text-only, faster, lighter model
+- `codellama` - Text-only, better for documents with code
+
+> **💡 Tip**: Use `llava` for vision processing or `llama3` for fast text-only mode.
 
 ## Performance Tips
 
+- **Vision vs Text Mode**: Enable vision for better accuracy, or disable for faster processing
+  ```bash
+  USE_VISION_MODEL=true   # Better quality (default)
+  USE_VISION_MODEL=false  # Faster processing
+  ```
+- **Adjust Image Quality**: For vision mode, balance quality and speed
+  ```bash
+  PDF_DPI=150  # Recommended balance
+  PDF_DPI=100  # Faster
+  PDF_DPI=200  # Higher quality
+  ```
 - **Use GPU acceleration**: If you have a GPU, configure Ollama/LM Studio to use it for faster processing
-- **Adjust model size**: Smaller models (7B parameters) are faster but less accurate than larger ones (70B+)
+- **Adjust model size**: Smaller models (7B) are faster but less accurate than larger ones (13B, 34B)
 - **Batch processing**: Process multiple PDFs by uploading them one after another
+
+For detailed vision model configuration, see [VISION_GUIDE.md](VISION_GUIDE.md).

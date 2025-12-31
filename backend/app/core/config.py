@@ -24,6 +24,16 @@ class Settings(BaseSettings):
     LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "lm_studio")
     LLM_MODEL: str = os.getenv("LLM_MODEL", "zai-org/glm-4.6v-flash")
 
+    # Vision Model Support
+    # Set to True to use vision models for PDF page image processing
+    USE_VISION_MODEL: bool = os.getenv("USE_VISION_MODEL", "true").lower() == "true"
+    # Vision model name (e.g., "llava" for Ollama, or vision-capable model in LM Studio)
+    VISION_MODEL: str = os.getenv("VISION_MODEL", "zai-org/glm-4.6v-flash")
+    # Image quality for PDF rendering (DPI - higher = better quality but slower)
+    PDF_DPI: int = int(os.getenv("PDF_DPI", "150"))
+    # Image format for vision processing: "png" or "jpeg"
+    IMAGE_FORMAT: str = os.getenv("IMAGE_FORMAT", "png")
+
     # CORS Configuration
     CORS_ORIGINS: List[str] = ["*"]
 
